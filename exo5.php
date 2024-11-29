@@ -4,7 +4,7 @@
 
 <head>
 
-  <title>skibidiquestionnaire</title>
+  <title>exo5</title>
 
   <meta charset="utf-8">
 
@@ -17,8 +17,10 @@
 </head>
 
 <body>
+
 <?php
- require_once 'connexion.php';
+
+require_once 'connexion.php';
  $stmt = $connexion->prepare("INSERT INTO tableau (nom, prenom, adresse ) VALUES (:nom, :prenom, :adresse)");
 
 if(!isset($_POST['btnEnvoyer'])) 
@@ -42,8 +44,37 @@ $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
 $stmt->bindValue(':prenom', $prenom, PDO::PARAM_STR);
 $stmt->bindValue(':adresse', $adresse, PDO::PARAM_STR);
 $stmt->execute();
-echo 'Ajouté avec succès'
+echo 'Ajouté avec succès';
 }
+
+$stmt->execute();
+
+$nb_ligne_affectees = $stmt->rowCount();
+
+echo $nb_ligne_affectees." ligne() insérée(s).<BR>";
+
+ $dernier_numero = $connexion->lastInsertId();
+
+// Optionnel, Nota Bene : sur récup. sur l'objet PDO, connexion
+
+echo "Dernier numéro utilisateur généré : ".$dernier_numero."<BR>";
+
+ // insertion d'une autre ligne avec des valeurs différentes
+
+ $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
+ $stmt->bindValue(':prenom', $prenom, PDO::PARAM_STR);
+ $stmt->bindValue(':adresse', $adresse, PDO::PARAM_STR);
+
+$stmt->execute();
+
+$nb_ligne_affectees = $stmt->rowCount();
+
+echo $nb_ligne_affectees." ligne() insérée(s).<BR>";
+
+$dernier_numero = $connexion->lastInsertId(); // Optionnel, Nota Bene : sur récup. sur l'objet PDO, connexion
+
+echo "Dernier numéro utilisateur généré : ".$dernier_numero."<BR>";
+
 ?>
 
 </body>
