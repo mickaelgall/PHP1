@@ -17,63 +17,37 @@
 </head>
 
 <body>
+  <form action="" method="post">
+      Nom : <input type="text" name="txtNom"><br>
+      Prénom : <input type="text" name="txtPrenom"><br>
+      Adresse : <input type="text" name="txtAdresse"><br>
+      <input type="submit" name="btnEnvoyer" value="Envoyer" >
+      </form>'
+  <?php
 
-<?php
+if(isset($_POST['btnEnvoyer'])) {
+require_once('connexion.php');
+$stmt = $connexion->prepare("INSERT INTO exo5 (nom, prenom, adresse ) VALUES (:nom, :prenom, :adresse)");
 
-require_once 'connexion.php';
- $stmt = $connexion->prepare("INSERT INTO tableau (nom, prenom, adresse ) VALUES (:nom, :prenom, :adresse)");
+$nom = $_POST['txtNom'];
+$prenom = $_POST['txtPrenom'];
+$adresse = $_POST['txtAdresse'];
 
-if(!isset($_POST['btnEnvoyer'])) 
-{/* L'entrée btnEnvoyer est vide = le formulaire n'a pas été posté, on affiche le formulaire */
-    echo '
-    <form action="" method="post">
-    Nom : <input type="text" name="txtNom"><br>
-    Prénom : <input type="text" name="txtPrenom"><br>
-    Adresse : <input type="text" name="txtAdresse"><br>
-    <input type="submit" name="btnEnvoyer" value="Envoyer" >
-    </form>';
-}
-
-else 
-/* L'utilisateur a cliqué sur Envoyer, l'entrée btnEnvoyer <> vide, on traite le formulaire */
-{    
-    $nom = $_POST['txtNom'];
-    $prenom = $_POST['txtPrenom'];
-    $adresse = $_POST['txtAdresse'];
 $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
 $stmt->bindValue(':prenom', $prenom, PDO::PARAM_STR);
 $stmt->bindValue(':adresse', $adresse, PDO::PARAM_STR);
+
 $stmt->execute();
 echo 'Ajouté avec succès';
+
+
+$nb_ligne_affectees = $stmt->rowCount();
+echo $nb_ligne_affectees." ligne() insérée(s).<BR>";
+
+$dernier_numero = $connexion->lastInsertId();
+echo "Dernier numéro utilisateur généré : ".$dernier_numero."<BR>";
+
 }
-
-$stmt->execute();
-
-$nb_ligne_affectees = $stmt->rowCount();
-
-echo $nb_ligne_affectees." ligne() insérée(s).<BR>";
-
- $dernier_numero = $connexion->lastInsertId();
-
-// Optionnel, Nota Bene : sur récup. sur l'objet PDO, connexion
-
-echo "Dernier numéro utilisateur généré : ".$dernier_numero."<BR>";
-
- // insertion d'une autre ligne avec des valeurs différentes
-
- $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
- $stmt->bindValue(':prenom', $prenom, PDO::PARAM_STR);
- $stmt->bindValue(':adresse', $adresse, PDO::PARAM_STR);
-
-$stmt->execute();
-
-$nb_ligne_affectees = $stmt->rowCount();
-
-echo $nb_ligne_affectees." ligne() insérée(s).<BR>";
-
-$dernier_numero = $connexion->lastInsertId(); // Optionnel, Nota Bene : sur récup. sur l'objet PDO, connexion
-
-echo "Dernier numéro utilisateur généré : ".$dernier_numero."<BR>";
 
 ?>
 
